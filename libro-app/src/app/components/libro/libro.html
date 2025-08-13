@@ -1,0 +1,265 @@
+<div class="container mt-4">
+    <h1>Libro</h1>
+    <div class="d-flex justify-content-center mb-3">
+        <button mat-raised-button color="primary" (click)="abrirModal()">
+            <mat-icon>add</mat-icon>Agregar Libro
+        </button>
+    </div>
+
+    <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Buscar</mat-label>
+        <input matInput (keyup)="filtroLibro($event)" placeholder="Buscar Libro...">
+    </mat-form-field>
+
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 w-100" >
+            <ng-container matColumnDef="detalles">  
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let libro">
+                    <button mat-icon-button color="primary" (click)="abrirModalDetalles(libro)">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="idLibro">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                <td mat-cell *matCellDef="let l">{{l.idLibro}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="titulo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Titulo</th>
+                <td mat-cell *matCellDef="let l">{{l.titulo}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="editorial">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Editorial</th>
+                <td mat-cell *matCellDef="let l">{{l.editorial}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="edicion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Edicion</th>
+                <td mat-cell *matCellDef="let l">{{l.edicion}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="idioma">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Idioma</th>
+                <td mat-cell *matCellDef="let l">{{l.idioma}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="fechaPublicacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de publicacion</th>
+                <td mat-cell *matCellDef="let l">{{l.fechaPublicacion | date: 'yyyy-MM-dd'}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="numEjemplares">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Numero de Ejemplares</th>
+                <td mat-cell *matCellDef="let l">{{l.numEjemplares}}</td>
+            </ng-container>
+
+            <!-- currency formato de moneda -->
+            <ng-container matColumnDef="precio">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
+                <td mat-cell *matCellDef="let l">{{l.precio | currency}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="autor">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Autor</th>
+                <td mat-cell *matCellDef="let l">{{nombreCompletoAutor(l.autor)}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="categoria">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Categoria</th>
+                <td mat-cell *matCellDef="let l">{{l.categoria ?.categoria}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Acciones</th>
+                <td mat-cell *matCellDef="let l">
+                    <div class="d-flex gap-1">
+                        <button class="btn btn-warning btn-sm me-1" (click)="abrirModal(l)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button class="btn btn-danger btn-sm" (click)="libro = l; delete()">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="mostrarColumnas"></tr>
+            <tr mat-row *matRowDef="let row; columns: mostrarColumnas;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5,10,25]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>
+
+
+<ng-template #modalLibro>
+    <mat-dialog-content>
+        <h2 mat-dialog-title>{{editar ? 'Editar Libro' : 'Agregar Libro'}}</h2>
+
+        <form #formLibro="ngForm" novalidate>
+            <div class="row">
+                <div class="col-md-12 mb-2">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Titulo</mat-label>
+                        <input matInput type="text" [(ngModel)]="libro.titulo" name="titulo" required />
+                    </mat-form-field>
+                </div>
+
+                 <div class="col-md-12 mb-2">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Descripcion</mat-label>
+                        <input matInput type="text" [(ngModel)]="libro.descripcion" name="descripcion" required />
+                    </mat-form-field>
+                </div>
+ <!-- editoriiaaaalll -->
+                 <div class="col-md-4 mb-2">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>editorial</mat-label>
+                        <input matInput type="text" [(ngModel)]="libro.editorial" name="editorial" required />
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-4 mb-2">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Idioma</mat-label>
+                        <input matInput type="text" [(ngModel)]="libro.idioma" name="idioma" required />
+                    </mat-form-field>
+                </div>
+
+                 <div class="col-md-4 mb-2">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Fecha de publicacion</mat-label>
+                        <input matInput [matDatepicker]="picker" [(ngModel)]="libro.fechaPublicacion" name="fechaPublicacion" required />
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-3 mb-2">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Numero de paginas</mat-label>
+                        <input matInput type="number" [(ngModel)]="libro.numPaginas" name="numPaginas" required />
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-3 mb-2">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>edicion</mat-label>
+                        <input matInput type="text" [(ngModel)]="libro.edicion" name="edicion" required />
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-3 mb-2">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Tipo de pasta</mat-label>
+                        <input matInput type="text" [(ngModel)]="libro.tipoPasta" name="tipoPasta" required />
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-3 mb-2">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Numero de ejemplares</mat-label>
+                        <input matInput type="number" [(ngModel)]="libro.numEjemplares" name="numEjemplares" required />
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-4 mb-2">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>ISBN</mat-label>
+                        <input matInput type="text" [(ngModel)]="libro.isbn" name="isbn" required />
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-4 mb-2">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Presentacion</mat-label>
+                        <input matInput type="text" [(ngModel)]="libro.presentacion" name="presentacion" required />
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-4 mb-2">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Precio</mat-label>
+                        <input matInput type="text" [(ngModel)]="libro.precio" name="precio" required />
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-6 mb-2">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Autor</mat-label>
+                        <mat-select [(ngModel)]="libro.autor" name="autor" required [compareWith]="compararAutores">
+                            <mat-option *ngFor="let a of autores" [value]="a">{{nombreCompletoAutor(a)}}</mat-option>
+                        </mat-select>
+                        </mat-form-field>
+                </div>
+
+                <div class="col-md-6 mb-2">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Categoria</mat-label>
+                        <mat-select [(ngModel)]="libro.categoria" name="categoria" required [compareWith]="compararCategorias">
+                            <mat-option *ngFor="let c of categorias" [value]="c">{{c.categoria}}</mat-option>
+                        </mat-select>
+                        </mat-form-field>
+                </div>
+
+                <div class="col-md-12 mb-2">
+                    <div class="custom-file-upload">
+                        <input #fileInput type="file" (change)="onFileSelected($event)" hidden>
+                        <button mat-raised-button color="primary" (click)="fileInput.click()" style="margin-right: 10px;">
+                            Seleccionar Imagen
+                        </button>
+                        <span *ngIf="selectedFile">{{selectedFile.name}}</span>
+                        <button mat-raised-button color="primary" (click)="subirImagen()">
+                            Subir Imagen
+                        </button>
+                    </div>
+
+                    <div class="imagen-container" *ngIf="libro.portada || imagenPreview">
+                        <img
+                            [src]="'http://localhost:8080/' + (imagenPreview || libro.portada)"
+                            alt="Portada del libro"
+                            class="imagen-portada"
+                        >
+                    </div>
+
+                </div>
+
+            </div>
+        </form>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancelar</button>
+        <button mat-flat-button color="primary" (click)="guardarLibro()" [disabled]="formLibro.invalid">
+            {{editar? 'Actualizar' : 'Guardar'}}
+        </button>
+    </mat-dialog-actions>
+</ng-template>
+
+<!-- Modal para detalles del libro -->
+<ng-template #modalDetalles let-data >
+    <h2 mat-dialog-title>Detalles del libro</h2>
+    <mat-dialog-content>
+        <div *ngIf="libroSeleccionado ?.portada">
+            <img [src]="'http://localhost:8080/' + libroSeleccionado?.portada" 
+            alt="Portada del libro"
+            style="width: 400px; margin-top:  1rem;"/>
+        </div>
+        <p><strong>Titulo</strong>{{libroSeleccionado?.titulo}}</p>
+        <p><strong>Editorial</strong>{{libroSeleccionado?.editorial}}</p>
+        <p><strong>Idioma</strong>{{libroSeleccionado?.idioma}}</p>
+        <p><strong>Fecha de publicacion</strong>{{libroSeleccionado?.fechaPublicacion}}</p>
+        <p><strong>Descripcion</strong>{{libroSeleccionado?.descripcion}}</p>
+        <p><strong>Tipo de Pasta</strong>{{libroSeleccionado?.tipoPasta}}</p>
+        <p><strong>ISBN</strong>{{libroSeleccionado?.isbn}}</p>
+        <p><strong>Presentacion</strong>{{libroSeleccionado?.presentacion}}</p>
+        <p><strong>Precio</strong>{{libroSeleccionado?.precio | currency}}</p>
+        <p><strong>Autor</strong>{{libroSeleccionado?.autor?.nombre}} {{libroSeleccionado?.autor?.apellido}}</p>
+        <p><strong>Categoria</strong>{{libroSeleccionado?.categoria?.categoria}}</p>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button (click)="cerrarModal()">Cerrar</button>
+    </mat-dialog-actions>
+</ng-template> 

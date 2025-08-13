@@ -1,0 +1,119 @@
+<div class="container mt-4" #formularioCliente>
+  <h2>{{ editar ? 'Editar Cliente' : 'Agregar Cliente' }}</h2>
+
+  <form (ngSubmit)="guardarCliente(formCliente)" #formCliente="ngForm" novalidate>
+    <div class="row">
+      <div class="col-md-4 mb-2">
+        <input type="number" class="form-control" placeholder="Cédula" [(ngModel)]="cliente.cedula"
+          name="cedula" required #cedula="ngModel"
+          [ngClass]="{ 'is-invalid': cedula.invalid && cedula.touched }" />
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <input type="text" class="form-control" placeholder="Nombre" [(ngModel)]="cliente.nombre"
+          name="nombre" required #nombre="ngModel"
+          [ngClass]="{ 'is-invalid': nombre.invalid && nombre.touched }" />
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <input type="text" class="form-control" placeholder="Apellido" [(ngModel)]="cliente.apellido"
+          name="apellido" required #apellido="ngModel"
+          [ngClass]="{ 'is-invalid': apellido.invalid && apellido.touched }" />
+      </div>
+
+      <div class="col-md-6 mb-2">
+        <input type="text" class="form-control" placeholder="Dirección" [(ngModel)]="cliente.direccion"
+          name="direccion" required #direccion="ngModel"
+          [ngClass]="{ 'is-invalid': direccion.invalid && direccion.touched }" />
+      </div>
+
+      <div class="col-md-3 mb-2">
+        <input type="number" class="form-control" placeholder="Teléfono" [(ngModel)]="cliente.telefono"
+          name="telefono" required #telefono="ngModel"
+          [ngClass]="{ 'is-invalid': telefono.invalid && telefono.touched }" />
+      </div>
+
+      <div class="col-md-3 mb-2">
+        <input type="email" class="form-control" placeholder="Correo" [(ngModel)]="cliente.correo"
+          name="correo" required #correo="ngModel"
+          [ngClass]="{ 'is-invalid': correo.invalid && correo.touched }" />
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary me-2" [disabled]="formCliente.invalid">
+      <mat-icon>{{ editar ? 'edit' : 'add' }}</mat-icon>
+    </button>
+
+    <button type="button" class="btn btn-secondary me-2" *ngIf="editar" (click)="editarClienteCancelar(formCliente)">
+      <!-- Cancelar -->
+      <mat-icon>close</mat-icon>
+    </button>
+
+  </form>
+
+  <hr class="my-4" />
+
+  <mat-form-field appearance="fill" class="w-100">
+    <mat-label>Buscar</mat-label>
+    <input matInput (keyup)="buscarCliente($event)" placeholder="Buscar cliente..." />
+  </mat-form-field>
+
+  <div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 w-100">
+
+      <ng-container matColumnDef="idCliente">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+        <td mat-cell *matCellDef="let c">{{ c.idCliente }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="cedula">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Cédula</th>
+        <td mat-cell *matCellDef="let c">{{ c.cedula }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+        <td mat-cell *matCellDef="let c">{{ c.nombre }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="apellido">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Apellido</th>
+        <td mat-cell *matCellDef="let c">{{ c.apellido }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="direccion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Dirección</th>
+        <td mat-cell *matCellDef="let c">{{ c.direccion }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="telefono">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</th>
+        <td mat-cell *matCellDef="let c">{{ c.telefono }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="correo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Correo</th>
+        <td mat-cell *matCellDef="let c">{{ c.correo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let c">
+          <div class="d-flex gap-1">
+            <button class="btn btn-warning btn-sm me-1" (click)="editarCliente(c)">
+              <mat-icon class="me-1">edit</mat-icon>
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="cliente = c; delete()">
+              <mat-icon class="me-1">delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="mostrarColumnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: mostrarColumnas"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+    
+  </div>
+</div>
