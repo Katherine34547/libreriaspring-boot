@@ -37,7 +37,7 @@ public class Libro {
     @Column(name = "presentacion")
     private String presentacion;
     @Column(name = "precio")
-    private String precio;
+    private Double precio;
 
     @ManyToOne
     @JoinColumn(name = "id_categoria")
@@ -50,7 +50,7 @@ public class Libro {
     public Libro() {
     }
 
-    public Libro(int idLibro, String titulo, String editorial, int numPaginas, String edicion, String idioma ,Date fechaPublicacion, String descripcion, String tipoPasta, String isbn, int numEjemplares, String portada, String presentacion, String precio,Categoria categoria,Autor autor) {
+    public Libro(int idLibro, String titulo, String editorial, int numPaginas, String edicion, String idioma ,Date fechaPublicacion, String descripcion, String tipoPasta, String isbn, int numEjemplares, String portada, String presentacion, Double precio,Categoria categoria,Autor autor) {
         this.idLibro = idLibro;
         this.titulo = titulo;
         this.editorial = editorial;
@@ -175,11 +175,11 @@ public class Libro {
         this.presentacion = presentacion;
     }
 
-    public String getPrecio() {
+    public Double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(String precio) {
+    public void setPrecio(Double precio) {
         this.precio = precio;
     }
 
