@@ -208,8 +208,15 @@ public class CarritoServiceImpl implements CarritoService {
     }
 
     @Override
+    @Transactional
     public void clear(String token) {
-
+        var carrito = getOrCreateByToken(token);
+        carrito.getItems().clear();
+        carrito.setSubtotal(BigDecimal.ZERO);
+        carrito.setDescuento(BigDecimal.ZERO);
+        carrito.setImpuestos(BigDecimal.ZERO);
+        carrito.setTotal(BigDecimal.ZERO);
+        carritoRepositorio.save(carrito);
     }
 
     @Override
