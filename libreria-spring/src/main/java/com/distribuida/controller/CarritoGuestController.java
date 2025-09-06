@@ -2,6 +2,7 @@ package com.distribuida.controller;
 
 import com.distribuida.model.Carrito;
 import com.distribuida.service.CarritoService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +46,20 @@ public class CarritoGuestController {
         int cantidad = body.getOrDefault("cantidad", 0);
         return ResponseEntity.ok(carritoService.updateItemCantidad(token, carritoItemId, cantidad));
 
+    }
+
+    @DeleteMapping("/items/{carritoItemId}")
+    public ResponseEntity<Void> remove(@RequestParam String token
+                                       ,@PathVariable long carritoItemId
+                                        ){
+        carritoService.removeItem(token,carritoItemId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/clear")
+    public ResponseEntity<Void> clear(@RequestParam String token){
+        carritoService.clear(token);
+        return ResponseEntity.noContent().build();
     }
 
 }

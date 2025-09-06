@@ -1,3 +1,37 @@
+<mat-toolbar color="primary" class="topbar">
+
+<a mat-button class="brand" routerLink="/libros1">
+    <mat-icon class="brand-logo" fontSet="material-icons-outlined" fontIcon="menu_book"></mat-icon>
+    <span class="brand-name">Libreria ABC S.A.</span>
+
+
+
+
+</a>
+
+<a mat-button routerLink="/categorias" routerLinkActive="active"><mat-icon fontSet="material-icons-outlined">category</mat-icon>
+<span>Categorias</span>
+</a>
+
+<a mat-button routerLink="/autores" routerLinkActive="active"><mat-icon fontSet="material-icons-outlined">person</mat-icon>
+<span>autores</span>
+</a>
+<a mat-button routerLink="/clientes" routerLinkActive="active"><mat-icon fontSet="material-icons-outlined">groups</mat-icon>
+<span>clientes</span>
+</a>
+<a mat-button routerLink="/libros" routerLinkActive="active">
+        <mat-icon fontSet="material-icons-outlined">library_books</mat-icon>
+        <span> Libros</span>
+    </a>
+    <span class="spacer"> </span>
+    <a mat-stroked-button color="accents" routerLinkActive="/carrito"><mat-icon fontSet="material-icons-outlined">
+        shopping_cart
+    </mat-icon>
+<span>Carrito</span>
+</a>
+</mat-toolbar>
+
+
 <div class="container mt-4" #formularioAutor>
   <h2>{{ editar ? 'Editar Autor' : 'Agregar Autor' }}</h2>
 
@@ -115,6 +149,6 @@
       <tr mat-row *matRowDef="let row; columns: mostrarColumnas"></tr>
     </table>
     <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
-    
+
   </div>
 </div>

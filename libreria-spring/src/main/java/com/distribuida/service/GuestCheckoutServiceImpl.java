@@ -37,7 +37,7 @@ public class GuestCheckoutServiceImpl implements GuestCheckoutService {
     @Override
     @Transactional
     public Factura checkoutByToken(String token) {
-        var carrito = carritoRepositorio.finByToken(token)
+        var carrito = carritoRepositorio.findByToken(token)
                 .orElseThrow(() -> new IllegalStateException("No existe carrito para el token"));
 
         if (carrito.getItems() == null || carrito.getItems().isEmpty()){

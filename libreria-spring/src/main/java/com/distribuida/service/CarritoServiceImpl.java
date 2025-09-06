@@ -138,7 +138,7 @@ public class CarritoServiceImpl implements CarritoService {
         if(token == null || token.isBlank()){
             throw new IllegalArgumentException("Token de carrito requerido.");
         }
-        return carritoRepositorio.finByToken(token).orElseGet(() ->{
+        return carritoRepositorio.findByToken(token).orElseGet(() ->{
             var c = new Carrito();
             c.setToken(token);
             c.setSubtotal(BigDecimal.ZERO);
@@ -222,7 +222,7 @@ public class CarritoServiceImpl implements CarritoService {
     @Override
     @Transactional   //(readOnly = true)
     public Carrito getByToken(String token) {
-        return carritoRepositorio.finByToken(token)
+        return carritoRepositorio.findByToken(token)
                 .orElseGet(() -> {
                     var c = new Carrito();
                     c.setToken(token);
